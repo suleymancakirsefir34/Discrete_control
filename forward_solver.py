@@ -23,7 +23,7 @@ x = np.arange(t_initial, t_final, dt)
 x[0] = 10
 
 # Bir döngü oluşturuluyor, her adımda x'in bir sonraki değeri hesaplanıyor
-for k in range(0, int(t_final/dt) - 1):
+for k in range(0, int((t_final-t_initial)/dt) - 1):
     # Birinci dereceden dinamik model: x'in bir sonraki değeri, şu anki değeri eksi 5 ile çarpılarak hesaplanıyor
     x[k + 1] = x[k] + dt * (-5 * x[k])
 
