@@ -1,0 +1,89 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+
+#####################################################################
+## plotting data begin
+def plot_func(tru_centered, t, title, ylabel_f, xlabel_f):
+    
+    plt.figure()
+    plt.plot(t,tru_centered,'r')
+    plt.xlabel(xlabel_f)
+    plt.ylabel(ylabel_f)
+    plt.grid(True)
+    plt.title(title)
+    plt.show()
+
+## plotting data end
+#####################################################################
+
+
+#####################################################################
+## difference solver function begin
+def centred_difference_solver(t_initial, t_final, dt, f_x_pre, f_x_now, f_x_fut, x_0, x_dot_0):
+    
+    length_of_loop = int((t_final - t_initial)/dt)
+
+    # initial condition assignment
+    tru = np.arange(t_initial, t_final, dt, dtype=float)
+
+    tru[0] = x_0
+    tru[1] = tru[0] + x_dot_0*dt
+
+    for i in range(1,length_of_loop - 1):
+        tru[i + 1] = (tru[i]*f_x_now + tru[i - 1]*f_x_pre)/f_x_fut
+    return tru
+## difference solver function end
+#####################################################################
+
+
+#####################################################################
+## main function begin
+def main():
+    # define sampling period
+    dt = 0.001
+    # initial conditions
+    x_0 = 10
+    x_dot_0 = 5
+    t_initial = 0.0
+    t_final = 10.0
+
+    
+
+    t = np.arange(t_initial, t_final, dt, dtype=float)
+
+    # define system paramaters
+    f_x_fut = (1/(dt*dt) + 3/(2*dt))        # c
+    f_x_now = (2/(dt*dt) -2)                # a
+    f_x_pre = (3/(2*dt) - 1/(dt*dt))        # b
+
+    system_paramaters = [t_initial,
+                         t_final,
+                         dt,
+                         f_x_pre,
+                         f_x_now,
+                         f_x_fut,
+                         x_0,
+                         x_dot_0,
+                         t]
+
+    return system_paramaters
+## main function end
+#####################################################################
+
+
+
+if __name__ == "__main__":
+    system_paramaters_main = main()
+    tru_centered = centred_difference_solver(system_paramaters_main[0],
+                                             system_paramaters_main[1],
+                                             system_paramaters_main[2],
+                                             system_paramaters_main[3],
+                                             system_paramaters_main[4],
+                                             system_paramaters_main[5],
+                                             system_paramaters_main[6],
+                                             system_paramaters_main[7])
+    t = system_paramaters_main[8]
+    
+    plot_func(tru_centered,t,"MCK Second Order System","Position (m)","time (sec)")
+    
